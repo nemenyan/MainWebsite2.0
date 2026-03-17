@@ -1,0 +1,103 @@
+/* PROJECTS */
+.projects-inner { position:relative; }
+
+/* hourglass bg */
+.proj-hourglass {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(500px,80%); pointer-events:none; user-select:none; z-index:0; opacity:.06;
+}
+.proj-hourglass svg { width:100%; height:auto; }
+
+.skills-row { display:flex; gap:60px; margin-bottom:48px; position:relative; z-index:1; }
+.skill-col h4 { font-size:9px; letter-spacing:.3em; color:var(--dim); text-transform:uppercase; margin-bottom:12px; }
+.tags { display:flex; flex-wrap:wrap; gap:6px; }
+.btn-shine {
+  position: relative;
+  display: flex;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: visible; 
+  
+}
+
+.btn-content {
+  position: relative;
+  z-index: 2; 
+  display: inline-block;
+  background: #080808;  
+  color: #e8e8e8;
+  padding: 0.6em 1em;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+@property --angle {
+  syntax:"<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.btn-shine::after,
+.btn-shine::before {
+  --angle:0deg;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% + 2px);
+  height: calc(100% + 5px);
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  background-image: conic-gradient(
+    from var(--angle), 
+    #ffffffa1, #3b6fff, #1a3caa, #0515f0ab, #f8f8f8b0, #d8e1ff88
+  );
+
+  animation: 3s spin linear infinite;
+  z-index: 0; 
+}
+
+.btn-shine:hover .btn-content {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(255, 255, 255, 0.986);
+}
+
+.btn-shine:active .btn-content {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 4px rgba(162, 27, 224, 0.288) inset;
+}
+
+.btn-shine::before {
+  filter: blur(1.8rem);
+  opacity: 0.5;
+}
+@keyframes spin {
+  from { --angle:0deg; }
+  to   { --angle:360deg; }
+}
+
+
+.proj-list { display:flex; flex-direction:column; position:relative; z-index:1; }
+.proj-card { border-top:1px solid var(--border); padding:0; cursor:none; overflow:hidden; transition:background .3s; position:relative; }
+.proj-card:last-child { border-bottom:1px solid var(--border); }
+.proj-card:hover { background:var(--bg2); }
+.proj-card:hover .proj-bar { border-left-color:var(--blue); }
+.proj-card:hover .proj-num { color:var(--blue); }
+.proj-card:hover .proj-title { color:var(--white); }
+.proj-bar { display:grid; grid-template-columns:80px 1fr auto; gap:28px; align-items:center; padding:24px 0 24px 16px; border-left:2px solid transparent; transition:border-color .3s; }
+.proj-num { font-size:10px; color:var(--dim); letter-spacing:.15em; transition:color .3s; }
+.proj-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.05em; transition:color .3s; }
+.proj-arrow { font-size:18px; color:var(--dim); transition:transform .4s ease,color .3s; flex-shrink:0; }
+.proj-card:hover .proj-arrow { transform:rotate(90deg); color:var(--blue); }
+.proj-drawer { max-height:0; overflow:hidden; transition:max-height .5s cubic-bezier(.4,0,.2,1),padding .5s ease; padding:0 16px 0 calc(80px + 28px + 16px); }
+.proj-card:hover .proj-drawer { max-height:400px; padding:0 16px 28px calc(80px + 28px + 16px); }
+.proj-desc { font-size:11px; color:var(--dim); line-height:1.9; font-family:'DM Sans',sans-serif; font-weight:300; max-width:520px; margin-bottom:16px; }
+.proj-status { font-size:9px; letter-spacing:.15em; color:var(--blue); border:1px solid var(--blue2); padding:4px 10px; white-space:nowrap; text-transform:uppercase; display:inline-block; margin-bottom:14px; }
+.proj-meta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.proj-meta-tag { font-size:9px; letter-spacing:.12em; color:var(--dim); border:1px solid var(--dim2); padding:3px 9px; text-transform:uppercase; }
+.proj-links { display:flex; gap:20px; }
+.proj-link { font-size:9px; color:var(--dim); letter-spacing:.15em; text-transform:uppercase; text-decoration:none; transition:color .2s; display:inline-flex; align-items:center; gap:6px; }
+.proj-link:hover { color:var(--blue); }
+.proj-link::after { content:'→'; }

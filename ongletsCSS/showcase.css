@@ -1,0 +1,122 @@
+
+/* SHOWCASE */
+.gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.gallery-item { aspect-ratio:3/4; background:var(--bg3); border:1px solid var(--border); position:relative; overflow:hidden; cursor:none; }
+.gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
+.gallery-overlay { position:absolute; inset:0; background:rgba(0,0,0,.72); display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.3em; color:var(--blue); opacity:0; transition:opacity .3s; }
+.gallery-item:hover .gallery-overlay { opacity:1; }
+.gallery-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:10px; letter-spacing:.1em; }
+
+/* ── SHOWCASE CAROUSEL ── */
+.showcase-carousel-wrap {
+  position:relative; width:100%; perspective:1800px; padding:3rem 0 2rem; overflow:hidden;
+}
+.showcase-track {
+  display:flex; transition:transform 0.75s cubic-bezier(0.21,0.61,0.35,1); transform-style:preserve-3d;
+}
+.showcase-card {
+  min-width:260px; max-width:260px; margin:0 18px;
+  border-radius:4px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 15px 30px rgba(0,0,0,0.5), 0 0 20px rgba(59,111,255,0.08);
+  transition:all 0.6s cubic-bezier(0.21,0.61,0.35,1);
+  transform-origin:center center; position:relative; cursor:none; background:var(--bg3);
+}
+.showcase-card:not(.sc-active) {
+  transform:scale(0.78) rotateY(35deg) translateZ(-100px); opacity:0.4; filter:brightness(0.6) saturate(0.5);
+}
+.showcase-card.sc-prev { transform:scale(0.76) rotateY(42deg) translateX(-50px) translateZ(-140px); }
+.showcase-card.sc-next { transform:scale(0.76) rotateY(-42deg) translateX(50px) translateZ(-140px); }
+.showcase-card.sc-active {
+  transform:scale(1) rotateY(0) translateZ(0); opacity:1; z-index:20;
+  box-shadow:0 25px 50px rgba(0,0,0,0.6), 0 0 40px rgba(59,111,255,0.22), inset 0 0 20px rgba(59,111,255,0.04);
+  filter:saturate(1.1) brightness(1.05);
+}
+.showcase-card.sc-active::before {
+  content:''; position:absolute; inset:-2px;
+  background:linear-gradient(45deg,transparent,rgba(59,111,255,0.5),rgba(200,200,255,0.3),rgba(59,111,255,0.5),transparent);
+  background-size:300% 300%; border-radius:5px; z-index:-1; filter:blur(6px);
+  animation:scBorderGlow 4s linear infinite;
+}
+@keyframes scBorderGlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+.showcase-card::after {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0.07) 0px,rgba(0,0,0,0.07) 1px,transparent 1px,transparent 4px);
+  z-index:3; opacity:0.35;
+}
+.sc-img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
+.sc-placeholder { width:100%; aspect-ratio:3/4; background:var(--bg2); display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:10px; letter-spacing:.1em; }
+.sc-info {
+  position:absolute; bottom:0; left:0; right:0;
+  background:rgba(8,8,8,0.88); backdrop-filter:blur(10px);
+  transform:translateY(100%); transition:transform 0.4s cubic-bezier(0.21,0.61,0.35,1);
+  padding:14px 16px; border-top:1px solid rgba(59,111,255,0.2); z-index:5;
+}
+.showcase-card.sc-active:hover .sc-info { transform:translateY(0); }
+.sc-title { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:.1em; color:var(--white); margin-bottom:3px; }
+.sc-type { font-size:9px; color:var(--blue); letter-spacing:.2em; text-transform:uppercase; }
+.sc-btn {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(14,14,20,0.85); border:1px solid rgba(59,111,255,0.35);
+  color:var(--accent); width:40px; height:40px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; cursor:none;
+  z-index:30; transition:all .3s; backdrop-filter:blur(6px); font-size:18px;
+}
+.sc-btn:hover { background:rgba(59,111,255,0.25); color:#fff; box-shadow:0 0 20px rgba(59,111,255,0.4); }
+.sc-prev-btn { left:12px; }
+.sc-next-btn { right:12px; }
+.sc-indicators { display:flex; justify-content:center; gap:8px; margin-top:1.5rem; }
+.sc-dot { width:18px; height:3px; border-radius:2px; background:rgba(59,111,255,0.18); cursor:none; transition:all .3s; }
+/* scan line bar on active card */
+.sc-scan {
+  position:absolute; left:0; top:0;
+  width:100%; height:2px; z-index:8; pointer-events:none;
+  background:linear-gradient(90deg, transparent 0%, rgba(59,111,255,0.9) 40%, rgba(255,255,255,0.8) 50%, rgba(59,111,255,0.9) 60%, transparent 100%);
+  animation:scScan 2s ease-in-out forwards;
+  opacity:0.8;
+}
+@keyframes scScan {
+  0%   { top:0%;     opacity:0.8; }
+  80%  { top:calc(100% - 2px); opacity:0.7; }
+  100% { top:calc(100% - 2px); opacity:0; }
+}
+
+/* ── ROTATING BORDER on skill tags ── */
+@property --btn-angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+
+.tag {
+  position:relative; padding:5px 12px;
+  font-size:10px; color:var(--dim); letter-spacing:.1em;
+  background:transparent; transition:color .25s;
+  display:inline-block; border:none;
+}
+/* layer 1 (behind text): solid background covers the whole tag */
+.tag::after {
+  content:''; position:absolute;
+  inset:2px; z-index:0; border-radius:1px;
+  background:#080808; /* same as --bg */
+  pointer-events:none;
+}
+/* layer 0 (furthest back): spinning conic — only the 2px ring outside ::after is visible */
+.tag::before {
+  --btn-angle:0deg;
+  content:''; position:absolute;
+  inset:-2px; z-index:-1; border-radius:3px;
+  background:conic-gradient(from var(--btn-angle),
+    #3b6fff, #1a3caa, #0a0a1a, #3b6fff, #8ab4ff, #1a3caa, #3b6fff
+  );
+  animation:tagSpin 3s linear infinite;
+}
+/* text must sit above the cover */
+.tag span, .tag { isolation:isolate; }
+.tag > * { position:relative; z-index:1; }
+/* for plain text inside tag, lift it above */
+.tag { color:var(--dim); }
+
+.tag:hover { color:var(--blue); }
+.tag:hover::before {
+  background:conic-gradient(from var(--btn-angle),
+    #fff, #3b6fff, #1a3caa, #fff, #8ab4ff, #3b6fff, #fff
+  );
+}
+@keyframes tagSpin { to { --btn-angle:360deg; } }
