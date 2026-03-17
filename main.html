@@ -46,26 +46,26 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
 /* star */
 .boot-shuriken {
-  position:relative; width:220px; height:220px;
+  position:relative; width:320px; height:320px;
   animation:shurikenSpin 3.2s cubic-bezier(.4,0,.2,1) forwards;
-  filter: drop-shadow(0 0 32px rgba(59,111,255,0.2)) drop-shadow(0 0 8px rgba(255,255,255,0.06));
+  filter: drop-shadow(0 0 48px rgba(59,111,255,0.3)) drop-shadow(0 0 12px rgba(255,255,255,0.08));
 }
 @keyframes shurikenSpin {
-  0%   { transform:rotate(-20deg) scale(0.4); opacity:0; }
+  0%   { transform:rotate(-20deg) scale(0.3); opacity:0; }
   15%  { opacity:1; }
   75%  { transform:rotate(310deg) scale(1.05); opacity:1; }
-  100% { transform:rotate(360deg) scale(1);   opacity:0.85; }
+  100% { transform:rotate(360deg) scale(1);   opacity:0.9; }
 }
 .boot-shuriken svg { width:100%; height:100%; }
 
-.boot-bar-wrap { width:220px; height:2px; background:#1a1a1a; overflow:hidden; }
+.boot-bar-wrap { width:300px; height:3px; background:#1a1a1a; overflow:hidden; }
 .boot-bar { height:100%; width:0%; background:linear-gradient(90deg, var(--blue2), var(--blue), rgba(255,255,255,0.6)); animation:loadBar 2.6s cubic-bezier(.4,0,.2,1) forwards; }
 @keyframes loadBar { to { width:100%; } }
 
-.boot-label { font-size:9px; letter-spacing:.35em; color:#3a3a4a; text-transform:uppercase; animation:blinkT 1s step-end infinite; }
+.boot-label { font-size:10px; letter-spacing:.35em; color:#3a3a4a; text-transform:uppercase; animation:blinkT 1s step-end infinite; }
 @keyframes blinkT { 0%,100%{opacity:1} 50%{opacity:0} }
 
-.boot-pct { font-family:'Bebas Neue',sans-serif; font-size:64px; color:rgba(255,255,255,.06); letter-spacing:.06em; line-height:1; }
+.boot-pct { font-family:'Bebas Neue',sans-serif; font-size:80px; color:rgba(255,255,255,.06); letter-spacing:.06em; line-height:1; }
 
 /* NAV */
 nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px max(40px,4vw); border-bottom:1px solid var(--border); background:rgba(8,8,8,.9); backdrop-filter:blur(16px); }
@@ -183,26 +183,130 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-i
   clip-path: polygon(35% 0%, 65% 0%, 65% 5%, 100% 5%, 55% 50%, 100% 95%, 65% 95%, 65% 100%, 35% 100%, 35% 95%, 0% 95%, 45% 50%, 0% 5%, 35% 5%);
 }
 
-/* T&C popover */
+/* T&C — RETRO ERROR WINDOW */
 .tnc-wrap { position:relative; display:inline; }
 .tnc-link { color:var(--blue); text-decoration:none; border-bottom:1px solid var(--blue2); cursor:none; }
-.tnc-popover {
-  display:none; position:absolute; bottom:calc(100% + 10px); left:0;
-  width:340px; background:var(--bg2); border:1px solid var(--blue2);
-  z-index:200; padding:0;
-  box-shadow:0 8px 40px rgba(0,0,0,.8), 0 0 0 1px var(--border);
-  animation:popIn .2s ease;
+
+/* overlay backdrop */
+.tnc-overlay {
+  display:none; position:fixed; inset:0; z-index:800;
+  background:rgba(0,0,0,0.55);
 }
-@keyframes popIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-.tnc-popover.open { display:block; }
-.tnc-popover-bar { background:var(--bg3); border-bottom:1px solid var(--border); padding:7px 12px; display:flex; justify-content:space-between; align-items:center; }
-.tnc-popover-title { font-size:9px; letter-spacing:.2em; color:var(--blue); text-transform:uppercase; }
-.tnc-popover-close { background:none; border:none; color:var(--dim); font-size:14px; cursor:none; transition:color .2s; }
-.tnc-popover-close:hover { color:var(--white); }
-.tnc-popover-body { padding:14px 16px; max-height:240px; overflow-y:auto; font-size:10.5px; color:var(--dim); line-height:1.9; font-family:'DM Sans',sans-serif; }
-.tnc-popover-body h4 { font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:.1em; color:var(--white); margin-bottom:6px; margin-top:12px; }
-.tnc-popover-body h4:first-child { margin-top:0; }
-.tnc-popover::before { content:''; position:absolute; bottom:-6px; left:14px; width:10px; height:10px; background:var(--bg2); border-right:1px solid var(--blue2); border-bottom:1px solid var(--blue2); transform:rotate(45deg); }
+.tnc-overlay.open { display:block; }
+
+/* the draggable window */
+.tnc-window {
+  display:none; position:fixed;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(420px, 92vw);
+  background:#000; border:2px solid #3b6fff;
+  z-index:900; font-family:'IBM Plex Mono',monospace;
+  box-shadow:4px 4px 0 #1a3caa, 0 0 40px rgba(59,111,255,0.35);
+}
+.tnc-window.open {
+  display:block;
+  animation:errPop .2s ease-out forwards;
+}
+@keyframes errPop {
+  0%   { opacity:0; scale:0.92; }
+  70%  { opacity:1; scale:1.02; }
+  100% { opacity:1; scale:1; }
+}
+
+/* title bar — Windows 95 blue */
+.tnc-titlebar {
+  background:linear-gradient(90deg, #0000aa, #1a3caa 40%, #3b6fff 100%);
+  padding:5px 8px; display:flex; align-items:center; justify-content:space-between;
+  cursor:move; user-select:none; border-bottom:2px solid #3b6fff;
+}
+.tnc-titlebar-left { display:flex; align-items:center; gap:8px; }
+.tnc-titlebar-icon {
+  width:16px; height:16px; background:#fff; display:flex; align-items:center;
+  justify-content:center; font-size:10px; flex-shrink:0; image-rendering:pixelated;
+}
+.tnc-titlebar-text { font-size:11px; color:#fff; letter-spacing:.08em; font-weight:700; }
+.tnc-titlebar-btn {
+  width:18px; height:14px; background:#c0c0c0; border:1px solid; cursor:none;
+  border-color:#fff #666 #666 #fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:#000; font-weight:900; padding:0; line-height:1;
+  transition:border-color .05s;
+}
+.tnc-titlebar-btn:hover { border-color:#666 #fff #fff #666; }
+.tnc-titlebar-btn:active { border-color:#666 #fff #fff #666; }
+
+/* body */
+.tnc-win-body { padding:16px 18px 10px; }
+
+/* big ERROR icon row */
+.tnc-err-row {
+  display:flex; align-items:flex-start; gap:14px; margin-bottom:14px;
+  padding-bottom:12px; border-bottom:1px solid #1a3caa;
+}
+.tnc-err-icon {
+  width:40px; height:40px; flex-shrink:0; border:2px solid #3b6fff;
+  background:#000055; display:flex; align-items:center; justify-content:center;
+  font-size:22px; image-rendering:pixelated;
+}
+.tnc-err-msg { font-size:11px; color:#fff; line-height:1.7; }
+.tnc-err-msg strong { color:#3b6fff; font-size:12px; letter-spacing:.1em; display:block; margin-bottom:4px; }
+
+/* scrollable content */
+.tnc-content {
+  max-height:240px; overflow-y:auto; padding-right:4px;
+  scrollbar-width:thin; scrollbar-color:#1a3caa #000;
+}
+.tnc-content::-webkit-scrollbar { width:8px; }
+.tnc-content::-webkit-scrollbar-track { background:#000; border:1px solid #1a3caa; }
+.tnc-content::-webkit-scrollbar-thumb { background:#1a3caa; }
+
+.tnc-section { margin-bottom:12px; }
+.tnc-section-head {
+  font-size:10px; letter-spacing:.2em; color:#3b6fff;
+  text-transform:uppercase; margin-bottom:4px;
+  display:flex; align-items:center; gap:6px;
+}
+.tnc-section-head::before { content:'▶'; font-size:7px; }
+.tnc-section p { font-size:10px; color:#aaa; line-height:1.8; }
+
+/* bottom button row */
+.tnc-btn-row {
+  display:flex; justify-content:flex-end; gap:8px;
+  padding:10px 0 4px; border-top:1px solid #1a3caa; margin-top:12px;
+}
+.tnc-btn {
+  background:#c0c0c0; border:2px solid; cursor:none;
+  border-color:#fff #666 #666 #fff;
+  padding:3px 20px; font-family:'IBM Plex Mono',monospace;
+  font-size:11px; font-weight:700; color:#000; letter-spacing:.05em;
+  transition:border-color .05s;
+}
+.tnc-btn:hover { background:#d4d4d4; }
+.tnc-btn:active { border-color:#666 #fff #fff #666; }
+/* progress bar at bottom */
+.tnc-progress-wrap {
+  height:8px; background:#000055; border:1px solid #3b6fff; margin-top:10px; overflow:hidden;
+}
+.tnc-progress-bar {
+  height:100%; width:0%;
+  background:repeating-linear-gradient(90deg, #3b6fff 0px, #3b6fff 8px, #000055 8px, #000055 12px);
+  animation:tncLoad 1.8s steps(12) forwards;
+}
+@keyframes tncLoad { to { width:100%; } }
+
+/* ── FLOATING STARS decoration ── */
+.floating-star {
+  position:fixed; pointer-events:none; z-index:1; user-select:none;
+  font-family:'IBM Plex Mono',monospace; color:rgba(59,111,255,0.2);
+  animation:starDrift linear infinite;
+}
+.floating-star.white { color:rgba(255,255,255,0.07); }
+@keyframes starDrift {
+  0%   { transform:translateY(0) rotate(0deg); opacity:0; }
+  5%   { opacity:1; }
+  95%  { opacity:0.6; }
+  100% { transform:translateY(-100vh) rotate(360deg); opacity:0; }
+}
 
 /* comm-matrix drop zone */
 .comm-matrix-wrap {
@@ -560,14 +664,14 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
 .sc-type { font-size:9px; color:var(--blue); letter-spacing:.2em; text-transform:uppercase; }
 .sc-btn {
   position:absolute; top:50%; transform:translateY(-50%);
-  background:rgba(14,14,20,0.75); border:1px solid rgba(59,111,255,0.25);
-  color:var(--accent); width:42px; height:42px; border-radius:50%;
+  background:rgba(14,14,20,0.85); border:1px solid rgba(59,111,255,0.35);
+  color:var(--accent); width:40px; height:40px; border-radius:50%;
   display:flex; align-items:center; justify-content:center; cursor:none;
-  z-index:20; transition:all .3s; backdrop-filter:blur(6px); font-size:16px;
+  z-index:30; transition:all .3s; backdrop-filter:blur(6px); font-size:18px;
 }
-.sc-btn:hover { background:rgba(59,111,255,0.2); color:#fff; box-shadow:0 0 20px rgba(59,111,255,0.35); }
-.sc-prev-btn { left:-21px; }
-.sc-next-btn { right:-21px; }
+.sc-btn:hover { background:rgba(59,111,255,0.25); color:#fff; box-shadow:0 0 20px rgba(59,111,255,0.4); }
+.sc-prev-btn { left:12px; }
+.sc-next-btn { right:12px; }
 .sc-indicators { display:flex; justify-content:center; gap:8px; margin-top:1.5rem; }
 .sc-dot { width:18px; height:3px; border-radius:2px; background:rgba(59,111,255,0.18); cursor:none; transition:all .3s; }
 /* scan line bar on active card */
@@ -584,41 +688,56 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
   100% { top:calc(100% - 2px); opacity:0; }
 }
 
-/* ── BTN-SHINE for project links ── */
+/* ── ROTATING BORDER on skill tags ── */
 @property --btn-angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
-.proj-links { display:flex; gap:16px; flex-wrap:wrap; }
-.proj-link-wrap { position:relative; display:inline-block; }
-.proj-link {
-  position:relative; overflow:visible;
-  font-size:9px; color:#ccc; letter-spacing:.15em; text-transform:uppercase;
-  text-decoration:none; display:inline-flex; align-items:center; gap:5px;
-  padding:5px 13px; background:rgba(18,18,24,1); border-radius:5px;
-  transition:color .2s, background .2s; z-index:1;
+
+.tag {
+  position:relative; padding:5px 12px;
+  font-size:10px; color:var(--dim); letter-spacing:.1em;
+  background:transparent; transition:color .25s;
+  display:inline-block; border:none;
 }
-.proj-link:hover { color:#fff; background:rgba(28,28,38,1); }
-.proj-link::after { content:'→'; }
-/* conic spin border */
-.proj-link::before {
+/* layer 1 (behind text): solid background covers the whole tag */
+.tag::after {
+  content:''; position:absolute;
+  inset:2px; z-index:0; border-radius:1px;
+  background:#080808; /* same as --bg */
+  pointer-events:none;
+}
+/* layer 0 (furthest back): spinning conic — only the 2px ring outside ::after is visible */
+.tag::before {
   --btn-angle:0deg;
-  content:''; position:absolute; top:50%; left:50%;
-  width:calc(100% + 2px); height:calc(100% + 4px);
-  transform:translate(-50%,-50%);
-  border-radius:6px;
-  background-image:conic-gradient(from var(--btn-angle), #220229bb, #ffffffcc, #44444420, #3b6fff66, #6d6d6daa, #220229bb);
-  animation:btnSpin 3s linear infinite; z-index:-1;
+  content:''; position:absolute;
+  inset:-2px; z-index:-1; border-radius:3px;
+  background:conic-gradient(from var(--btn-angle),
+    #3b6fff, #1a3caa, #0a0a1a, #3b6fff, #8ab4ff, #1a3caa, #3b6fff
+  );
+  animation:tagSpin 3s linear infinite;
 }
-/* blurred outer glow on the wrapper */
-.proj-link-wrap::before {
-  --btn-angle:0deg;
-  content:''; position:absolute; top:50%; left:50%;
-  width:calc(100% + 4px); height:calc(100% + 8px);
-  transform:translate(-50%,-50%);
-  border-radius:6px;
-  background-image:conic-gradient(from var(--btn-angle), #220229bb, #ffffffcc, #44444420, #3b6fff66, #6d6d6daa, #220229bb);
-  animation:btnSpin 3s linear infinite;
-  filter:blur(1.4rem); opacity:0.4; z-index:0; pointer-events:none;
+/* text must sit above the cover */
+.tag span, .tag { isolation:isolate; }
+.tag > * { position:relative; z-index:1; }
+/* for plain text inside tag, lift it above */
+.tag { color:var(--dim); }
+
+.tag:hover { color:var(--blue); }
+.tag:hover::before {
+  background:conic-gradient(from var(--btn-angle),
+    #fff, #3b6fff, #1a3caa, #fff, #8ab4ff, #3b6fff, #fff
+  );
 }
-@keyframes btnSpin { from{--btn-angle:0deg} to{--btn-angle:360deg} }
+@keyframes tagSpin { to { --btn-angle:360deg; } }
+
+/* ── PROJ GITHUB LINK — simple clean ── */
+.proj-links { display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; }
+.proj-github-link {
+  font-size:9px; color:var(--dim); letter-spacing:.15em; text-transform:uppercase;
+  text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  border-bottom:1px solid var(--dim2); padding-bottom:2px;
+  transition:color .2s, border-color .2s;
+}
+.proj-github-link:hover { color:var(--white); border-color:var(--white); }
+.proj-github-link svg { flex-shrink:0; }
 
 /* Large screens — ensure max-width content reads well */
 @media(min-width:1200px){
@@ -791,6 +910,60 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
   </div>
 </div>
 
+<!-- TNC OVERLAY -->
+<div class="tnc-overlay" id="tncOverlay"></div>
+
+<!-- TNC RETRO ERROR WINDOW -->
+<div class="tnc-window" id="tncWindow">
+  <div class="tnc-titlebar" id="tncTitlebar">
+    <div class="tnc-titlebar-left">
+      <div class="tnc-titlebar-icon">⚠</div>
+      <span class="tnc-titlebar-text">TERMS.EXE — READ BEFORE PROCEEDING</span>
+    </div>
+    <button class="tnc-titlebar-btn" id="tncClose">✕</button>
+  </div>
+  <div class="tnc-win-body">
+    <div class="tnc-err-row">
+      <div class="tnc-err-icon">!</div>
+      <div class="tnc-err-msg">
+        <strong>NOTICE — COMMISSION AGREEMENT</strong>
+        By commissioning me you agree to the following terms. Failure to comply may result in cancellation without refund.
+      </div>
+    </div>
+    <div class="tnc-content">
+      <div class="tnc-section">
+        <div class="tnc-section-head">Payment</div>
+        <p>50% upfront required before work begins. Final payment due before delivery. PayPal only. No refunds after sketch approval.</p>
+      </div>
+      <div class="tnc-section">
+        <div class="tnc-section-head">Usage Rights</div>
+        <p>Commissioned work is for personal use only. Commercial use requires a separate agreement and pricing. You may repost with proper credit.</p>
+      </div>
+      <div class="tnc-section">
+        <div class="tnc-section-head">Revisions</div>
+        <p>2 minor revisions included at no cost. Major changes or full redesigns after sketch approval will incur additional fees.</p>
+      </div>
+      <div class="tnc-section">
+        <div class="tnc-section-head">Timeframe</div>
+        <p>Delivery time varies between 1–4 weeks. I'll keep you updated. Rush orders available at +50% of the base price.</p>
+      </div>
+      <div class="tnc-section">
+        <div class="tnc-section-head">Artist Rights</div>
+        <p>I retain the right to post finished commissions in my portfolio unless you request otherwise. A confidentiality fee applies for private work.</p>
+      </div>
+      <div class="tnc-section">
+        <div class="tnc-section-head">Cancellations</div>
+        <p>If you cancel after the sketch is complete, the upfront fee is non-refundable. I reserve the right to refuse any commission without explanation.</p>
+      </div>
+    </div>
+    <div class="tnc-progress-wrap"><div class="tnc-progress-bar" id="tncBar"></div></div>
+    <div class="tnc-btn-row">
+      <button class="tnc-btn" id="tncOk">OK</button>
+      <button class="tnc-btn" id="tncCancel">CANCEL</button>
+    </div>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav>
   <div class="nav-logo">nemenyan</div>
@@ -889,7 +1062,7 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
           <span class="proj-status">Ongoing</span>
           <div class="proj-meta"><span class="proj-meta-tag">Game Dev</span><span class="proj-meta-tag">Python</span><span class="proj-meta-tag">Original Assets</span></div>
           <p class="proj-desc">An ongoing indie game project combining board game mechanics with fast-paced arcade gameplay. Built with custom assets and original character design. Add more details here.</p>
-          <div class="proj-links"><div class="proj-link-wrap"><a href="#" class="proj-link">GitHub</a></div><div class="proj-link-wrap"><a href="#" class="proj-link">Live Demo</a></div></div>
+          <div class="proj-links"><a href="#" class="proj-github-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.49 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58C20.57 21.8 24 17.31 24 12 24 5.37 18.63 0 12 0z"/></svg>View on GitHub →</a></div>
         </div>
       </div>
       <div class="proj-card">
@@ -898,7 +1071,7 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
           <span class="proj-status">Ongoing</span>
           <div class="proj-meta"><span class="proj-meta-tag">Ren'Py</span><span class="proj-meta-tag">Narrative Design</span><span class="proj-meta-tag">2D Art</span></div>
           <p class="proj-desc">Players interact with Aiko, a quiet and isolated girl, guiding her through a fragile balance between light growth, recovery and darkness. A psychological single-choice visual novel with branching paths and multiple endings.</p>
-          <div class="proj-links"><div class="proj-link-wrap"><a href="#" class="proj-link">GitHub</a></div><div class="proj-link-wrap"><a href="#" class="proj-link">Devlog</a></div></div>
+          <div class="proj-links"><a href="#" class="proj-github-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.49 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58C20.57 21.8 24 17.31 24 12 24 5.37 18.63 0 12 0z"/></svg>View on GitHub →</a></div>
         </div>
       </div>
       <div class="proj-card">
@@ -907,7 +1080,7 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
           <span class="proj-status">Complete</span>
           <div class="proj-meta"><span class="proj-meta-tag">HTML/CSS/JS</span><span class="proj-meta-tag">Fan Project</span><span class="proj-meta-tag">UI Design</span></div>
           <p class="proj-desc">A web-based interactive project inspired by Hell Girl (Jigoku Shoujo). A dark, immersive world through multiple interactive interfaces, all styled like a phone app.</p>
-          <div class="proj-links"><div class="proj-link-wrap"><a href="#" class="proj-link">GitHub</a></div><div class="proj-link-wrap"><a href="#" class="proj-link">Live Site</a></div></div>
+          <div class="proj-links"><a href="#" class="proj-github-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.49 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.01 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58C20.57 21.8 24 17.31 24 12 24 5.37 18.63 0 12 0z"/></svg>View on GitHub →</a></div>
         </div>
       </div>
     </div>
@@ -918,7 +1091,7 @@ footer span { font-size:10px; color:var(--dim); letter-spacing:.12em; }
 <div class="section-wrap" id="commissions">
   <div class="s-head"><span class="s-num">[ 03 ]</span><h2 class="s-title">COMMISSIONS</h2></div>
   <div class="status-row"><div class="sdot"></div>Commissions currently open</div>
-  <p class="comm-notice">If you consider commissioning me please go read the <span class="tnc-wrap"><a href="#" class="tnc-link" id="tncLink">terms and conditions</a><div class="tnc-popover" id="tncPopover"><div class="tnc-popover-bar"><span class="tnc-popover-title">Terms &amp; Conditions</span><button class="tnc-popover-close" id="tncClose">×</button></div><div class="tnc-popover-body"><h4>Payment</h4>50% upfront is required before I start. Final payment before delivery. PayPal only. No refunds after sketch approval.<h4>Usage</h4>Commissioned work is for personal use only. Commercial use requires separate agreement and pricing. You may post the art with proper credit.<h4>Revisions</h4>2 minor revisions included. Major changes or full redesigns after sketch approval will incur additional fees.<h4>Timeframe</h4>Delivery time varies (1–4 weeks). I'll keep you updated. Rush orders available at +50%.<h4>Rights</h4>I retain the right to post finished commissions in my portfolio unless you request otherwise (confidentiality fee applies).<h4>Cancellations</h4>If you cancel after the sketch is complete, the upfront fee is non-refundable. I reserve the right to refuse any commission.</div></div></span></p>
+  <p class="comm-notice">If you consider commissioning me please go read the <a href="#" class="tnc-link" id="tncLink">terms and conditions</a></p>
   <div class="comm-wrap">
     <div class="comm-fullbody-text">FULL BODY</div>
     <div class="comm-layout">
@@ -1282,15 +1455,114 @@ document.getElementById('openGalModal').addEventListener('click',()=>{
 document.getElementById('closeGalModal').addEventListener('click',()=>document.getElementById('galModal').classList.remove('open'));
 document.getElementById('galModal').addEventListener('click',e=>{if(e.target===document.getElementById('galModal'))document.getElementById('galModal').classList.remove('open');});
 loadGallery();
-// T&C POPOVER
+// T&C RETRO WINDOW
 (function(){
-  const link=document.getElementById('tncLink');
-  const pop=document.getElementById('tncPopover');
-  const close=document.getElementById('tncClose');
-  if(!link||!pop) return;
-  link.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();pop.classList.toggle('open');});
-  close.addEventListener('click',e=>{e.stopPropagation();pop.classList.remove('open');});
-  document.addEventListener('click',e=>{if(!pop.contains(e.target)&&e.target!==link)pop.classList.remove('open');});
+  const link    = document.getElementById('tncLink');
+  const win     = document.getElementById('tncWindow');
+  const overlay = document.getElementById('tncOverlay');
+  const closeBtn= document.getElementById('tncClose');
+  const okBtn   = document.getElementById('tncOk');
+  const cancelBtn=document.getElementById('tncCancel');
+  const bar     = document.getElementById('tncBar');
+  if(!link||!win) return;
+
+  function openWin(e){
+    e.preventDefault();
+    // always reset to center
+    win.style.left = '50%';
+    win.style.top  = '50%';
+    win.style.transform = 'translate(-50%,-50%)';
+    win.classList.add('open');
+    overlay.classList.add('open');
+    if(bar){ bar.style.animation='none'; void bar.offsetWidth; bar.style.animation='tncLoad 1.8s steps(12) forwards'; }
+  }
+  function closeWin(e){
+    if(e) e.stopPropagation();
+    win.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  link.addEventListener('click', openWin);
+  closeBtn.addEventListener('click', closeWin);
+  okBtn.addEventListener('click', closeWin);
+  cancelBtn.addEventListener('click', closeWin);
+  overlay.addEventListener('click', closeWin);
+
+  // DRAG — works from anywhere on the window
+  let drag=false, ox=0, oy=0;
+  win.style.cursor='grab';
+  const noDrag = [closeBtn, okBtn, cancelBtn];
+
+  win.addEventListener('mousedown', e=>{
+    if(noDrag.some(b=>b&&b.contains(e.target))) return;
+    // Kill the centering transform first, lock to exact current position
+    const r = win.getBoundingClientRect();
+    win.style.transform = 'none';
+    win.style.left = r.left + 'px';
+    win.style.top  = r.top  + 'px';
+    // NOW compute offset (after transform removed, position is stable)
+    ox = e.clientX - r.left;
+    oy = e.clientY - r.top;
+    drag = true;
+    win.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e=>{
+    if(!drag) return;
+    const nx = Math.max(0, Math.min(e.clientX - ox, window.innerWidth  - win.offsetWidth));
+    const ny = Math.max(0, Math.min(e.clientY - oy, window.innerHeight - win.offsetHeight));
+    win.style.left = nx + 'px';
+    win.style.top  = ny + 'px';
+  });
+
+  document.addEventListener('mouseup', ()=>{
+    if(!drag) return;
+    drag = false;
+    win.style.cursor = 'grab';
+  });
+
+  // touch drag
+  win.addEventListener('touchstart', e=>{
+    if(noDrag.some(b=>b&&b.contains(e.target))) return;
+    const t = e.touches[0];
+    const r = win.getBoundingClientRect();
+    win.style.transform = 'none';
+    win.style.left = r.left + 'px';
+    win.style.top  = r.top  + 'px';
+    ox = t.clientX - r.left;
+    oy = t.clientY - r.top;
+    drag = true;
+  },{passive:true});
+  document.addEventListener('touchmove', e=>{
+    if(!drag) return;
+    const t = e.touches[0];
+    const nx = Math.max(0, Math.min(t.clientX - ox, window.innerWidth  - win.offsetWidth));
+    const ny = Math.max(0, Math.min(t.clientY - oy, window.innerHeight - win.offsetHeight));
+    win.style.left = nx + 'px';
+    win.style.top  = ny + 'px';
+  },{passive:true});
+  document.addEventListener('touchend', ()=>{ drag = false; });
+})();
+
+// ── FLOATING STARS ──
+(function(){
+  const chars = ['✦','✧','★','✩','✪','⋆','·','*'];
+  const total = 20;
+  for(let i=0;i<total;i++){
+    const s = document.createElement('div');
+    s.className = 'floating-star' + (Math.random()>.5?' white':'');
+    const size = Math.random()*14+8;
+    s.textContent = chars[Math.floor(Math.random()*chars.length)];
+    s.style.cssText = `
+      left:${Math.random()*100}vw;
+      bottom:-${Math.random()*20+5}vh;
+      font-size:${size}px;
+      animation-duration:${Math.random()*20+15}s;
+      animation-delay:-${Math.random()*20}s;
+    `;
+    document.body.appendChild(s);
+  }
 })();
 
 // MATRIX RAIN — hero only
