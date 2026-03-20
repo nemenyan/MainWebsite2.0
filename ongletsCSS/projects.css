@@ -97,6 +97,7 @@
 .proj-status { font-size:9px; letter-spacing:.15em; color:var(--blue); border:1px solid var(--blue2); padding:4px 10px; white-space:nowrap; text-transform:uppercase; display:inline-block; margin-bottom:14px; }
 .proj-meta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
 .proj-meta-tag { font-size:9px; letter-spacing:.12em; color:var(--dim); border:1px solid var(--dim2); padding:3px 9px; text-transform:uppercase; }
+.proj-img{ width:50%; height:50%; object-fit:cover; display:block; }
 .proj-links { display:flex; gap:20px; }
 .proj-link { font-size:9px; color:var(--dim); letter-spacing:.15em; text-transform:uppercase; text-decoration:none; transition:color .2s; display:inline-flex; align-items:center; gap:6px; }
 .proj-link:hover { color:var(--blue); }
