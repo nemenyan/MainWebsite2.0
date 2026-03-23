@@ -74,12 +74,8 @@
 .showcase-card .card-image {
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
   transition: transform 1.5s ease;
-}
-
-.showcase-card.sc-active .card-image {
-  transform: scale(1.05);
 }
 
 /* Scanline overlay sur l'image */
@@ -106,7 +102,16 @@
   box-sizing: border-box;
   display: block;
   height: auto;
+  flex-direction: column;
+  flex: 1;          
+  overflow: hidden; 
 }
+
+.showcase-card {
+  display: flex;
+  flex-direction: column;
+}
+
 
 .showcase-card .card-title {
   font-family: 'Bebas Neue', sans-serif;

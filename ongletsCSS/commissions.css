@@ -64,3 +64,35 @@
 .strip-btn:hover { background:rgba(59,111,255,.5); }
 .strip-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:10px; letter-spacing:.1em; }
 .binary { font-size:9px; color:var(--dim2); letter-spacing:.04em; line-height:1.7; text-align:right; margin:18px 0 0; word-break:break-all; user-select:none; }
+/* FULL BODY background container */
+.comm-wrap {
+  position: relative;
+}
+.comm-fullbody-text {
+  position: absolute;
+  left: 5vw;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(78px, 15vw, 240px);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.315);
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: .1em;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.comm-fullbody-img {
+  position: absolute;
+  top: 0;
+  left: -20px;        /* stays just left of the layout */
+  width: 200px;        /* fixed column width */
+  height: 100%;        /* matches the height of comm-wrap */
+  object-fit:cover;
+  object-position: top;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.95;
+}
